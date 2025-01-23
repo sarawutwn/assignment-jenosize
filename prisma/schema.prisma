@@ -1,0 +1,29 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Products {
+  product_id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  product_name           String
+  product_price          Float
+  product_stock_quantity Int
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+}
+
+model Users {
+  user_id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_fullname    String 
+  user_username    String   @unique()
+  user_password    String
+  user_filed_stamp Int      @default(0)
+  status           Boolean  @default(true)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}

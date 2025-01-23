@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Assignment Jenosize Co.,Ltd.",
+    "version": "1.0.0",
+    "description": "This is the API documentation for my project"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:9999",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/api/products": {
+      "get": {
+        "summary": "Get all products",
+        "description": "Retrieve a list of products from the database",
+        "responses": {
+          "200": {
+            "description": "A list of products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The product ID",
+                        "example": "123"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The product name",
+                        "example": "Apple"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new product",
+        "description": "Add a new product to the database",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the product",
+                    "example": "Banana"
+                  },
+                  "price": {
+                    "type": "number",
+                    "description": "Price of the product",
+                    "example": 10.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product created successfully"
+          }
+        }
+      }
+    }
+  }
+}
