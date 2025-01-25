@@ -1,16 +1,10 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import type { BcryptServicePorts } from "../../ports/bcrypt.ports";
 
-export class BcryptUtils {
+export class BcryptUtils implements BcryptServicePorts {
   private SECRET_KEY = Bun.env.SERVER_SECRET_KEY || "";
   private saltRounds = 10;
-
-  async encrypt(data: string): Promise<{ hash: string; expiresAt: Date }> {
-    const hash = await bcrypt.hash(data, this.saltRounds);
-    const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 24);
-    return { hash, expiresAt };
-  }
 
   async encryptPassword(password: string): Promise<string> {
     const hash = await bcrypt.hash(password, this.saltRounds);
@@ -52,10 +46,5 @@ export class BcryptUtils {
     }
     const isValid = errors.length === 0;
     return { isValid, errors };
-  }
-
-  isExpired(expiresAt: Date): boolean {
-    const now = new Date();
-    return now > expiresAt;
   }
 }

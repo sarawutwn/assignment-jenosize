@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
-import type { BcryptUtils } from "../../utils/bcrypt.utils";
-import type { AuthServicePorts } from "../../ports/auth/auth.ports";
+import type { BcryptUtils } from "./bcrypt.service";
+import type { AuthServicePorts } from "../../ports/auth.ports";
 
 export class AuthService implements AuthServicePorts {
   constructor(private prisma: PrismaClient, private bcrypt: BcryptUtils) {}

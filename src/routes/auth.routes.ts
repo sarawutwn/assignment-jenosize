@@ -2,7 +2,7 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { AuthController } from "../adapters/controllers/auth.controller";
 import { AuthService } from "../adapters/services/auth.service";
-import { BcryptUtils } from "../utils/bcrypt.utils";
+import { BcryptUtils } from "../adapters/services/bcrypt.service";
 
 const prisma = new PrismaClient();
 const bcryptUtils = new BcryptUtils();

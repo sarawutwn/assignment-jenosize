@@ -1,4 +1,4 @@
-import type { ProductServicePorts } from "../../ports/products/products.ports";
+import type { ProductServicePorts } from "../../ports/products.ports";
 import { PrismaClient, type Products } from "@prisma/client";
 
 export class ProductService implements ProductServicePorts {
