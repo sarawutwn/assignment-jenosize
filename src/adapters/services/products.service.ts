@@ -11,8 +11,7 @@ export class ProductService implements ProductServicePorts {
 
   async updateProduct(product_id: string, product_name: string, product_price: number, product_stock_quantity: number): Promise<Products | null> {
     try {
-      const result = await this.prisma.products.update({ where: { product_id }, data: { product_name, product_price, product_stock_quantity } });
-      return result;
+      return this.prisma.products.update({ where: { product_id }, data: { product_name, product_price, product_stock_quantity } });
     } catch (err) {
       return null;
     }
