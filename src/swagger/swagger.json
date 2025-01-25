@@ -3,7 +3,7 @@
   "info": {
     "title": "Assignment Jenosize Co.,Ltd.",
     "version": "1.0.0",
-    "description": "This is the API documentation for my project"
+    "description": "This RESTAPI is created for the job interview at Jenosize Co., LTD. It is developed using Node.js, TypeScript, Prisma, and MongoDB. The API is designed for managing products and handling authentication with JWT."
   },
   "servers": [
     {
@@ -11,31 +11,138 @@
       "description": "Development server"
     }
   ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "required": ["product_name", "product_price", "product_stock_quantity"],
+        "properties": {
+          "product_name": { "type": "string" },
+          "product_price": { "type": "number", "minimum": 0 },
+          "product_stock_quantity": { "type": "number", "minimum": 0 }
+        }
+      },
+      "AuthCredentials": {
+        "type": "object",
+        "required": ["username", "password"],
+        "properties": {
+          "username": { "type": "string" },
+          "password": { "type": "string" }
+        }
+      }
+    }
+  },
   "paths": {
     "/api/products": {
       "get": {
         "summary": "Get all products",
-        "description": "Retrieve a list of products from the database",
+        "description": "Retrieve all products based on the specified filter.",
+        "parameters": [
+          {
+            "name": "product_name",
+            "in": "query",
+            "description": "For searching similar product names.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_price",
+            "in": "query",
+            "description": "For sorting by price in ascending or descending order ('DESC' or 'ASC' can be sent; if not provided, the default is 'ASC').",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "A list of products",
+            "description": "success",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "The product ID",
-                        "example": "123"
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "The product name",
-                        "example": "Apple"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Get all product successfully."
+                    },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "product_id": {
+                            "type": "string",
+                            "example": "6791c22bff7b47c4fb41175c"
+                          },
+                          "product_name": {
+                            "type": "string",
+                            "example": "IPhone 14 Pro Max"
+                          },
+                          "product_price": {
+                            "type": "integer",
+                            "example": 39500
+                          },
+                          "product_stock_quantity": {
+                            "type": "integer",
+                            "example": 10
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-01-23T04:14:35.589Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2025-01-23T04:14:35.589Z"
+                          }
+                        }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Not found this product."
                     }
                   }
                 }
@@ -46,7 +153,7 @@
       },
       "post": {
         "summary": "Create a new product",
-        "description": "Add a new product to the database",
+        "description": "Create a new product in the system.",
         "requestBody": {
           "required": true,
           "content": {
@@ -54,15 +161,20 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": {
+                  "product_name": {
                     "type": "string",
-                    "description": "Name of the product",
-                    "example": "Banana"
+                    "description": "name of product",
+                    "example": "Samesung Galaxy zflip"
                   },
-                  "price": {
+                  "product_price": {
                     "type": "number",
-                    "description": "Price of the product",
-                    "example": 10.5
+                    "description": "price of product",
+                    "example": 24500
+                  },
+                  "product_stock_quantity": {
+                    "type": "number",
+                    "description": "stock of product",
+                    "example": 10
                   }
                 }
               }
@@ -70,8 +182,482 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Product created successfully"
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "create product successfully."
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string",
+                          "example": "6794a5f99677c2c6410d9750"
+                        },
+                        "product_name": {
+                          "type": "string",
+                          "example": "Samesung Galaxy zflip"
+                        },
+                        "product_price": {
+                          "type": "integer",
+                          "example": 34500
+                        },
+                        "product_stock_quantity": {
+                          "type": "integer",
+                          "example": 20
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-25T08:51:05.073Z"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-25T08:51:05.073Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products/{product_id}": {
+      "get": {
+        "summary": "Get product by ID",
+        "description": "Retrieve product details by ID.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "description": "product ID",
+            "schema": {
+              "type": "string",
+              "example": "6794a5f99677c2c6410d9750"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "update product successfully."
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string",
+                          "example": "6794a5f99677c2c6410d9750"
+                        },
+                        "product_name": {
+                          "type": "string",
+                          "example": "Samesung Galaxy zflip"
+                        },
+                        "product_price": {
+                          "type": "integer",
+                          "example": 34500
+                        },
+                        "product_stock_quantity": {
+                          "type": "integer",
+                          "example": 20
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-25T08:51:05.073Z"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-25T13:58:01.566Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Not found this product."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update product",
+        "description": "Update product details using the product ID.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "description": "product ID",
+            "schema": {
+              "type": "string",
+              "example": "6794a5f99677c2c6410d9750"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_name": {
+                    "type": "string",
+                    "description": "name of product",
+                    "example": "Samesung Galaxy zflip"
+                  },
+                  "product_price": {
+                    "type": "number",
+                    "description": "price of product",
+                    "example": 24500
+                  },
+                  "product_stock_quantity": {
+                    "type": "number",
+                    "description": "stock of product",
+                    "example": 10
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "update product successfully."
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string",
+                          "example": "6794a5f99677c2c6410d9750"
+                        },
+                        "product_name": {
+                          "type": "string",
+                          "example": "Samesung Galaxy zflip"
+                        },
+                        "product_price": {
+                          "type": "integer",
+                          "example": 34500
+                        },
+                        "product_stock_quantity": {
+                          "type": "integer",
+                          "example": 20
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-25T08:51:05.073Z"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-01-25T13:58:01.566Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Product not found."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete product",
+        "description": "Delete product information using the product ID.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "description": "product ID",
+            "schema": {
+              "type": "string",
+              "example": "6794a5f99677c2c6410d9750"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Delete product successfully."
+                    },
+                    "result": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "product does not exist."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/sign-in": {
+      "post": {
+        "summary": "Signin",
+        "description": "sign in",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "username of users",
+                    "example": "chotika.kj"
+                  },
+                  "password": {
+                    "type": "number",
+                    "description": "password",
+                    "example": "Aa111111*"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Signin successfully."
+                    },
+                    "result": {
+                      "type": "string",
+                      "description": "JWT token",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjc5NDk2YmQ3ZjViZjBiOGJhNGVhOGIyIiwidXNlcm5hbWUiOiJjaG90aWthLmtqIiwiaWF0IjoxNzM3NzkyOTQxLCJleHAiOjE3Mzc4NzkzNDF9.gdDMLIpX7Q94T5dztJaOrlxt2t5Fkca-VsPkh7bnE70"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "password is not compare",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Password is not compare!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/sign-up": {
+      "post": {
+        "summary": "Signup (register)",
+        "description": "registration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullname": {
+                    "type": "string",
+                    "description": "fullname",
+                    "example": "chotika khotnjan"
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "username",
+                    "example": "chotika.kj"
+                  },
+                  "password": {
+                    "type": "number",
+                    "description": "password",
+                    "example": "Aa111111*"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Signup successfully."
+                    },
+                    "result": {
+                      "type": "null",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Enter data that does not comply with the required format, such as a password that is too simple, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "error": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "Password must contain at least one symbol (@$!%*?&), Password must be at least 8 characters long"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

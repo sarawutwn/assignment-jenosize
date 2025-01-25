@@ -14,6 +14,7 @@ const swaggerOptions: Options = {
       },
     ],
   },
+
   apis: ["./src/routes/*.ts", "./src/adapters/controllers/*.ts"],
 };
 

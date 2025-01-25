@@ -41,6 +41,9 @@ export class ProductController {
       }
       // ส่งข้อมูลที่ Validate แล้วเข้าไปทำงานต่อที่ Service.
       const result = await this.service.updateProduct(req.params.product_id, Body.product_name, Body.product_price, Body.product_stock_quantity);
+      if (!result) {
+        res.status(404).json(responseUtils.errorResponse(404, "Product not found."));
+      }
       res.status(200).json(responseUtils.successResponse(200, "update product successfully.", result));
     } catch (err) {
       console.log(err);
@@ -67,12 +70,28 @@ export class ProductController {
     const responseUtils = new ResponseUtils();
     try {
       const product_name = typeof req.query.product_name === "string" ? req.query.product_name : null;
-      const result = await this.service.getAllProducts(product_name);
+      const product_price = req.query.product_price?.toLocaleString() === "desc" ? "desc" : "asc";
+      const result = await this.service.getAllProducts(product_name, product_price);
       if (result.length === 0) {
         res.status(404).json(responseUtils.errorResponse(404, "Not found this product."));
         return;
       }
       res.status(200).json(responseUtils.successResponse(200, "Get all product successfully.", result));
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(responseUtils.errorResponse(500, "Internal Server Error."));
+    }
+  }
+
+  async deleteProductByID(req: Request, res: Response): Promise<void> {
+    const responseUtils = new ResponseUtils();
+    try {
+      const result = await this.service.deleteProducts(req.params.product_id);
+      if (!result) {
+        res.status(404).json(responseUtils.errorResponse(404, "product does not exist."));
+        return;
+      }
+      res.status(200).json(responseUtils.successResponse(200, "Delete product successfully.", result));
     } catch (err) {
       console.log(err);
       res.status(500).json(responseUtils.errorResponse(500, "Internal Server Error."));

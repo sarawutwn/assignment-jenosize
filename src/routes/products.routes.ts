@@ -14,5 +14,6 @@ router.get("/", verifyToken, controller.getAllProducts.bind(controller));
 router.get("/:product_id", verifyToken, controller.getProductByID.bind(controller));
 router.post("/", verifyToken, controller.createProduct.bind(controller));
 router.put("/:product_id", verifyToken, controller.updateProduct.bind(controller));
+router.delete("/:product_id", verifyToken, controller.deleteProductByID.bind(controller));
 
 export default router;
