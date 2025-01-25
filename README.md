@@ -1,7 +1,7 @@
 
 # Assignment Jenosize Co., LTD
 
-Repository นี้ เกิดขึ้นเพื่อนำไปสัมภาษณ์งานบริษัท Jenosize Co.,
+Repository นี้ เกิดขึ้นเพื่อนำไปสัมภาษณ์งานบริษัท Jenosize Co., LTD
 โดยใช้ Stack Node, typescript, prisma, mongodb ในการพัฒนา โดยโปรเจคจะมี RESTAPI สำหรับการจัดการ products และการ Authentication ด้วย JWT เพื่อเข้าใช้งาน
 
 # Start Project
