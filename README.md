@@ -26,7 +26,7 @@ npm run start
 
 ใน assignment ที่สอง จะเป็นการเขียน function เพื่อ run script ดังนั้นจะไม่มีการเปิดใช้งานผ่าน RESTAPI 
 
-หากต้องการดูโค้ดสามารถดูได้ที่ path /src/adapter/service/assignment
+หากต้องการดูโค้ดสามารถดูได้ที่ path /src/adapter/service/assignment.service.ts
 
 หากต้องการดูผลลัพท์ performance สามารถใช้คำสั่งด้านล่างเพื่อดู log ของ performance
 
