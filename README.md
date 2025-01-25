@@ -39,3 +39,5 @@ This is an image of the test result of the program
 # API Documents
 
 http://127.0.0.1:9999/documents
+
+![This is an image of the swagger pages.](./assets/swagger.png)
