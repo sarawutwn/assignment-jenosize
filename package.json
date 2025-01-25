@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun --watch index.ts",
+    "start": "bun run index.ts",
     "build": "bun build ./index.ts --outdir ./dist",
     "assignment": "bun --no-cache run ./src/script/assignment.service.run.ts"
   },
