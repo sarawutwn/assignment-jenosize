@@ -31,6 +31,9 @@ To see the performance results, use the following command to check the performan
 ```bash
 npm run assignment
 ```
+
+This is an image of the test result of the program
+
 ![This is an image of the test result of the program](./assets/result-assignment-2.png)
 
 # API Documents
